@@ -5,7 +5,8 @@ export type ServiceCategory =
   | 'nail_care'
   | 'removal'
   | 'extension'
-  | 'hand_care';
+  | 'hand_care'
+  | 'set';
 
 export interface Service {
   id: string;
@@ -33,6 +34,7 @@ export const SERVICE_CATEGORY_LABELS: Record<ServiceCategory, { en: string; kr: 
   removal: { en: 'Removal', kr: '제거' },
   extension: { en: 'Extension', kr: '연장' },
   hand_care: { en: 'Hand Care', kr: '핸드 케어' },
+  set: { en: 'Set Menu', kr: '세트 메뉴' },
 };
 
 export const DEPOSIT_AMOUNT = 20000; // Fixed deposit amount in KRW

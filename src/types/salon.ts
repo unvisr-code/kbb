@@ -5,7 +5,8 @@ export type Region =
   | 'itaewon'
   | 'myeongdong'
   | 'sinsa'
-  | 'apgujeong';
+  | 'apgujeong'
+  | 'hannam';
 
 export type Amenity =
   | 'wifi'
@@ -63,6 +64,7 @@ export const REGION_LABELS: Record<Region, { en: string; kr: string }> = {
   myeongdong: { en: 'Myeongdong', kr: '명동' },
   sinsa: { en: 'Sinsa', kr: '신사' },
   apgujeong: { en: 'Apgujeong', kr: '압구정' },
+  hannam: { en: 'Hannam', kr: '한남' },
 };
 
 export const AMENITY_LABELS: Record<Amenity, { en: string; kr: string; icon: string }> = {

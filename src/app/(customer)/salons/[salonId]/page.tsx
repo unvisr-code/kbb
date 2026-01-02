@@ -31,6 +31,8 @@ const AMENITY_ICONS: Record<Amenity, React.ComponentType<{ className?: string }>
   card_payment: CreditCard,
   parking: Car,
   english_menu: Globe,
+  japanese_menu: Globe,
+  chinese_menu: Globe,
   reservation_only: Clock,
   wheelchair_accessible: () => <span className="text-lg">♿</span>,
   child_friendly: () => <span className="text-lg">👶</span>,
