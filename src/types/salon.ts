@@ -12,6 +12,8 @@ export type Amenity =
   | 'parking'
   | 'card_payment'
   | 'english_menu'
+  | 'japanese_menu'
+  | 'chinese_menu'
   | 'reservation_only'
   | 'wheelchair_accessible'
   | 'child_friendly';
@@ -68,6 +70,8 @@ export const AMENITY_LABELS: Record<Amenity, { en: string; kr: string; icon: str
   parking: { en: 'Parking', kr: '주차 가능', icon: 'car' },
   card_payment: { en: 'Card Payment', kr: '카드 결제', icon: 'credit-card' },
   english_menu: { en: 'English Menu', kr: '영문 메뉴', icon: 'globe' },
+  japanese_menu: { en: 'Japanese Menu', kr: '일문 메뉴', icon: 'globe' },
+  chinese_menu: { en: 'Chinese Menu', kr: '중문 메뉴', icon: 'globe' },
   reservation_only: { en: 'Reservation Only', kr: '예약제', icon: 'calendar-check' },
   wheelchair_accessible: { en: 'Wheelchair Accessible', kr: '휠체어 이용 가능', icon: 'accessibility' },
   child_friendly: { en: 'Child Friendly', kr: '어린이 동반 가능', icon: 'baby' },
