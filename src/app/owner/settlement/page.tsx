@@ -87,53 +87,59 @@ export default function SettlementPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('2024-03');
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">정산</h1>
-          <p className="text-neutral-500 mt-1">수익과 정산 내역을 확인하세요</p>
-        </div>
+      <div className="flex flex-col gap-3 sm:gap-4 mb-5 sm:mb-6 lg:mb-8">
+        <div className="flex items-start sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-900">정산</h1>
+            <p className="text-xs sm:text-sm text-neutral-500 mt-0.5 sm:mt-1">수익과 정산 내역을 확인하세요</p>
+          </div>
 
-        {/* Period Selector */}
-        <div className="flex items-center gap-3">
-          <select
-            value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
-            className="px-4 py-2 bg-white border border-neutral-200 rounded-xl focus:border-primary-400 outline-none"
-          >
-            {monthlyData.map((data) => (
-              <option key={data.month} value={data.month}>
-                {formatMonth(data.month)}
-              </option>
-            ))}
-          </select>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 rounded-xl hover:bg-neutral-50 transition-colors">
-            <Download className="w-4 h-4" />
-            내보내기
-          </button>
+          {/* Period Selector */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              className="px-2.5 sm:px-4 py-1.5 sm:py-2 bg-white border border-neutral-200 rounded-lg sm:rounded-xl focus:border-primary-400 outline-none text-xs sm:text-sm"
+            >
+              {monthlyData.map((data) => (
+                <option key={data.month} value={data.month}>
+                  {formatMonth(data.month)}
+                </option>
+              ))}
+            </select>
+            <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 rounded-xl hover:bg-neutral-50 transition-colors text-sm">
+              <Download className="w-4 h-4" />
+              내보내기
+            </button>
+            <button className="sm:hidden flex items-center justify-center w-9 h-9 bg-white border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors">
+              <Download className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 mb-5 sm:mb-6 lg:mb-8">
         {/* Total Revenue */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl border border-neutral-100 p-5"
+          style={{ willChange: 'transform, opacity' }}
+          className="bg-white rounded-xl sm:rounded-2xl border border-neutral-100 p-3 sm:p-4 lg:p-5"
         >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-neutral-500">총 매출</span>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-blue-500" />
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs lg:text-sm text-neutral-500">총 매출</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg sm:rounded-xl bg-blue-50 flex items-center justify-center">
+              <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-blue-500" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-900">
+          <p className="text-base sm:text-lg lg:text-2xl font-bold text-neutral-900">
             {formatPrice(summaryData.totalRevenue)}
           </p>
-          <div className="flex items-center gap-1 mt-2 text-green-600 text-sm">
-            <ArrowUpRight className="w-4 h-4" />
+          <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-green-600 text-[10px] sm:text-xs lg:text-sm">
+            <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>12% 증가</span>
           </div>
         </motion.div>
@@ -142,19 +148,20 @@ export default function SettlementPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="bg-white rounded-2xl border border-neutral-100 p-5"
+          transition={{ delay: 0.03 }}
+          style={{ willChange: 'transform, opacity' }}
+          className="bg-white rounded-xl sm:rounded-2xl border border-neutral-100 p-3 sm:p-4 lg:p-5"
         >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-neutral-500">예약금 수령</span>
-            <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-green-500" />
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs lg:text-sm text-neutral-500">예약금 수령</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg sm:rounded-xl bg-green-50 flex items-center justify-center">
+              <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-green-500" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-900">
+          <p className="text-base sm:text-lg lg:text-2xl font-bold text-neutral-900">
             {formatPrice(summaryData.totalDeposits)}
           </p>
-          <p className="text-sm text-neutral-500 mt-2">
+          <p className="text-[10px] sm:text-xs lg:text-sm text-neutral-500 mt-1.5 sm:mt-2">
             {summaryData.completedBookings}건 완료
           </p>
         </motion.div>
@@ -163,36 +170,38 @@ export default function SettlementPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl border border-neutral-100 p-5"
+          transition={{ delay: 0.06 }}
+          style={{ willChange: 'transform, opacity' }}
+          className="bg-white rounded-xl sm:rounded-2xl border border-neutral-100 p-3 sm:p-4 lg:p-5"
         >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-neutral-500">플랫폼 수수료</span>
-            <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
-              <CreditCard className="w-5 h-5 text-amber-500" />
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs lg:text-sm text-neutral-500">플랫폼 수수료</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg sm:rounded-xl bg-amber-50 flex items-center justify-center">
+              <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-amber-500" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-900">
+          <p className="text-base sm:text-lg lg:text-2xl font-bold text-neutral-900">
             {formatPrice(summaryData.platformFee)}
           </p>
-          <p className="text-sm text-neutral-500 mt-2">예약금의 10%</p>
+          <p className="text-[10px] sm:text-xs lg:text-sm text-neutral-500 mt-1.5 sm:mt-2">예약금의 10%</p>
         </motion.div>
 
         {/* Net Settlement */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="bg-gradient-to-br from-primary-500 to-rose-500 rounded-2xl p-5 text-white"
+          transition={{ delay: 0.09 }}
+          style={{ willChange: 'transform, opacity' }}
+          className="bg-gradient-to-br from-primary-500 to-rose-500 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 text-white"
         >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-white/80">순 정산액</span>
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs lg:text-sm text-white/80">순 정산액</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg sm:rounded-xl bg-white/20 flex items-center justify-center">
+              <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
             </div>
           </div>
-          <p className="text-2xl font-bold">{formatPrice(summaryData.netSettlement)}</p>
-          <p className="text-sm text-white/80 mt-2">
+          <p className="text-base sm:text-lg lg:text-2xl font-bold">{formatPrice(summaryData.netSettlement)}</p>
+          <p className="text-[10px] sm:text-xs lg:text-sm text-white/80 mt-1.5 sm:mt-2">
             대기 중: {formatPrice(summaryData.pendingSettlement)}
           </p>
         </motion.div>
@@ -202,23 +211,24 @@ export default function SettlementPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="bg-white rounded-2xl border border-neutral-100 p-6 mb-8"
+        transition={{ delay: 0.12 }}
+        style={{ willChange: 'transform, opacity' }}
+        className="bg-white rounded-xl sm:rounded-2xl border border-neutral-100 p-4 sm:p-6 mb-5 sm:mb-6 lg:mb-8"
       >
-        <h2 className="font-semibold text-neutral-900 mb-6">월별 추이</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <h2 className="font-semibold text-sm sm:text-base text-neutral-900 mb-4 sm:mb-6">월별 추이</h2>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           {monthlyData.map((data, index) => (
             <div key={data.month} className="text-center">
-              <div className="h-32 bg-neutral-50 rounded-xl relative overflow-hidden mb-3">
+              <div className="h-20 sm:h-28 lg:h-32 bg-neutral-50 rounded-lg sm:rounded-xl relative overflow-hidden mb-2 sm:mb-3">
                 <div
-                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-primary-500 to-primary-400 rounded-b-xl transition-all"
+                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-primary-500 to-primary-400 rounded-b-lg sm:rounded-b-xl transition-all"
                   style={{
                     height: `${(data.net / 1200000) * 100}%`,
                   }}
                 />
               </div>
-              <p className="text-sm text-neutral-500">{formatMonth(data.month)}</p>
-              <p className="font-semibold text-neutral-900">{formatPrice(data.net)}</p>
+              <p className="text-[10px] sm:text-xs lg:text-sm text-neutral-500">{formatMonth(data.month)}</p>
+              <p className="font-semibold text-xs sm:text-sm lg:text-base text-neutral-900">{formatPrice(data.net)}</p>
             </div>
           ))}
         </div>
@@ -228,12 +238,13 @@ export default function SettlementPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25 }}
-        className="bg-white rounded-2xl border border-neutral-100 overflow-hidden"
+        transition={{ delay: 0.15 }}
+        style={{ willChange: 'transform, opacity' }}
+        className="bg-white rounded-xl sm:rounded-2xl border border-neutral-100 overflow-hidden"
       >
-        <div className="flex items-center justify-between p-6 border-b border-neutral-100">
-          <h2 className="font-semibold text-neutral-900">최근 거래 내역</h2>
-          <button className="text-sm text-primary-500 font-medium hover:text-primary-600">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-neutral-100">
+          <h2 className="font-semibold text-sm sm:text-base text-neutral-900">최근 거래 내역</h2>
+          <button className="text-xs sm:text-sm text-primary-500 font-medium hover:text-primary-600">
             전체 보기
           </button>
         </div>
@@ -242,49 +253,49 @@ export default function SettlementPage() {
           {recentTransactions.map((transaction) => (
             <div
               key={transaction.id}
-              className="flex items-center gap-4 p-4 hover:bg-neutral-50 transition-colors"
+              className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-neutral-50 transition-colors"
             >
               {/* Icon */}
               <div
                 className={cn(
-                  'w-10 h-10 rounded-xl flex items-center justify-center',
+                  'w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0',
                   transaction.type === 'deposit' && 'bg-green-50',
                   transaction.type === 'settlement' && 'bg-blue-50',
                   transaction.type === 'refund' && 'bg-red-50'
                 )}
               >
                 {transaction.type === 'deposit' && (
-                  <ArrowDownRight className="w-5 h-5 text-green-500" />
+                  <ArrowDownRight className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                 )}
                 {transaction.type === 'settlement' && (
-                  <ArrowUpRight className="w-5 h-5 text-blue-500" />
+                  <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                 )}
                 {transaction.type === 'refund' && (
-                  <TrendingDown className="w-5 h-5 text-red-500" />
+                  <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                 )}
               </div>
 
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-neutral-900">{transaction.description}</p>
-                <p className="text-sm text-neutral-500 truncate">
+                <p className="font-medium text-xs sm:text-sm lg:text-base text-neutral-900">{transaction.description}</p>
+                <p className="text-[10px] sm:text-xs lg:text-sm text-neutral-500 truncate">
                   {transaction.customer && `${transaction.customer}`}
                   {transaction.service && ` • ${transaction.service}`}
                 </p>
               </div>
 
               {/* Amount & Date */}
-              <div className="text-right">
+              <div className="text-right flex-shrink-0">
                 <p
                   className={cn(
-                    'font-semibold',
+                    'font-semibold text-xs sm:text-sm lg:text-base',
                     transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'
                   )}
                 >
                   {transaction.amount >= 0 ? '+' : ''}
                   {formatPrice(transaction.amount)}
                 </p>
-                <p className="text-xs text-neutral-400">
+                <p className="text-[10px] sm:text-xs text-neutral-400">
                   {transaction.date.toLocaleDateString('ko-KR', {
                     month: 'short',
                     day: 'numeric',
@@ -300,22 +311,23 @@ export default function SettlementPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="bg-neutral-900 rounded-2xl p-6 mt-6"
+        transition={{ delay: 0.18 }}
+        style={{ willChange: 'transform, opacity' }}
+        className="bg-neutral-900 rounded-xl sm:rounded-2xl p-4 sm:p-6 mt-4 sm:mt-6"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-start sm:items-center justify-between gap-3">
           <div>
-            <p className="text-neutral-400 text-sm">정산 계좌</p>
-            <p className="text-white font-semibold mt-1">신한은행 110-***-***890</p>
-            <p className="text-neutral-400 text-sm mt-1">예금주: 김*영</p>
+            <p className="text-neutral-400 text-[10px] sm:text-xs lg:text-sm">정산 계좌</p>
+            <p className="text-white font-semibold text-sm sm:text-base mt-0.5 sm:mt-1">신한은행 110-***-***890</p>
+            <p className="text-neutral-400 text-[10px] sm:text-xs lg:text-sm mt-0.5 sm:mt-1">예금주: 김*영</p>
           </div>
-          <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-sm font-medium transition-colors">
+          <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-colors flex-shrink-0">
             계좌 변경
           </button>
         </div>
 
-        <div className="border-t border-white/10 mt-4 pt-4">
-          <div className="flex items-center justify-between text-sm">
+        <div className="border-t border-white/10 mt-3 sm:mt-4 pt-3 sm:pt-4">
+          <div className="flex items-center justify-between text-[10px] sm:text-xs lg:text-sm">
             <span className="text-neutral-400">다음 정산 예정일</span>
             <span className="text-white font-medium">2024년 3월 20일 (수)</span>
           </div>

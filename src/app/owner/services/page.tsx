@@ -38,46 +38,48 @@ export default function ServicesPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-6 lg:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900">시술 관리</h1>
-          <p className="text-neutral-500 mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-900">시술 관리</h1>
+          <p className="text-xs sm:text-sm text-neutral-500 mt-0.5 sm:mt-1">
             시술 메뉴를 추가하고 관리하세요
           </p>
         </div>
 
         <button
           onClick={handleAdd}
-          className="flex items-center gap-2 px-5 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors"
+          className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 lg:py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg sm:rounded-xl transition-colors text-sm sm:text-base"
         >
-          <Plus className="w-5 h-5" />
-          시술 추가
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="hidden sm:inline">시술 추가</span>
+          <span className="sm:hidden">추가</span>
         </button>
       </div>
 
       {/* Services Grid */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
         {services.map((service, index) => (
           <motion.div
             key={service.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className="bg-white rounded-2xl border border-neutral-100 overflow-hidden hover:shadow-lg transition-shadow"
+            transition={{ delay: index * 0.03 }}
+            style={{ willChange: 'transform, opacity' }}
+            className="bg-white rounded-xl sm:rounded-2xl border border-neutral-100 overflow-hidden hover:shadow-lg transition-shadow"
           >
-            <div className="flex gap-4 p-4">
+            <div className="flex gap-3 sm:gap-4 p-3 sm:p-4">
               {/* Service Image */}
-              <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-neutral-100">
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0 bg-neutral-100">
                 <img
                   src={service.images[0]}
                   alt={service.name}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 {service.isFeatured && (
-                  <div className="absolute top-1.5 left-1.5 bg-amber-500 text-white px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-0.5">
-                    <Sparkles className="w-2.5 h-2.5" />
+                  <div className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 bg-amber-500 text-white px-1 sm:px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold flex items-center gap-0.5">
+                    <Sparkles className="w-2 h-2 sm:w-2.5 sm:h-2.5" />
                     인기
                   </div>
                 )}
@@ -85,23 +87,23 @@ export default function ServicesPage() {
 
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="text-xs font-medium text-primary-500 uppercase tracking-wider">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <span className="text-[10px] sm:text-xs font-medium text-primary-500 uppercase tracking-wider">
                       {SERVICE_CATEGORY_LABELS[service.category].kr}
                     </span>
-                    <h3 className="font-semibold text-neutral-900 mt-0.5">
+                    <h3 className="font-semibold text-neutral-900 text-sm sm:text-base mt-0.5 truncate">
                       {service.name}
                     </h3>
                   </div>
 
                   {/* Menu */}
-                  <div className="relative">
+                  <div className="relative flex-shrink-0">
                     <button
                       onClick={() =>
                         setMenuOpen(menuOpen === service.id ? null : service.id)
                       }
-                      className="w-8 h-8 rounded-lg hover:bg-neutral-100 flex items-center justify-center"
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg hover:bg-neutral-100 flex items-center justify-center"
                     >
                       <MoreVertical className="w-4 h-4 text-neutral-400" />
                     </button>
@@ -112,17 +114,17 @@ export default function ServicesPage() {
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.95 }}
-                          className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-lg border border-neutral-100 py-1 z-10 min-w-[120px]"
+                          className="absolute right-0 top-full mt-1 bg-white rounded-lg sm:rounded-xl shadow-lg border border-neutral-100 py-1 z-10 min-w-[100px] sm:min-w-[120px]"
                         >
                           <button
                             onClick={() => handleEdit(service)}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                            className="w-full flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-neutral-700 hover:bg-neutral-50"
                           >
-                            <Edit3 className="w-4 h-4" />
+                            <Edit3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             수정
                           </button>
-                          <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                            <Trash2 className="w-4 h-4" />
+                          <button className="w-full flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-red-600 hover:bg-red-50">
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             삭제
                           </button>
                         </motion.div>
@@ -131,19 +133,19 @@ export default function ServicesPage() {
                   </div>
                 </div>
 
-                <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
+                <p className="text-xs sm:text-sm text-neutral-500 mt-1 line-clamp-2 hidden sm:block">
                   {service.description}
                 </p>
 
-                <div className="flex items-center gap-3 mt-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-2 sm:mt-3">
                   <div className="flex items-center gap-1 text-neutral-500">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span className="text-xs">{formatDuration(service.duration)}</span>
+                    <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <span className="text-[10px] sm:text-xs">{formatDuration(service.duration)}</span>
                   </div>
-                  <span className="font-semibold text-neutral-900">
+                  <span className="font-semibold text-sm sm:text-base text-neutral-900">
                     {formatPrice(service.price)}
                   </span>
-                  <span className="text-xs text-primary-500 bg-primary-50 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] sm:text-xs text-primary-500 bg-primary-50 px-1.5 sm:px-2 py-0.5 rounded-full hidden sm:inline">
                     예약금 {formatPrice(DEPOSIT_AMOUNT)}
                   </span>
                 </div>
@@ -152,19 +154,19 @@ export default function ServicesPage() {
 
             {/* Stats */}
             <div className="grid grid-cols-3 border-t border-neutral-100">
-              <div className="p-3 text-center border-r border-neutral-100">
-                <p className="text-xs text-neutral-400">이번 달 예약</p>
-                <p className="font-semibold text-neutral-900">24건</p>
+              <div className="p-2 sm:p-3 text-center border-r border-neutral-100">
+                <p className="text-[10px] sm:text-xs text-neutral-400">예약</p>
+                <p className="font-semibold text-xs sm:text-base text-neutral-900">24건</p>
               </div>
-              <div className="p-3 text-center border-r border-neutral-100">
-                <p className="text-xs text-neutral-400">매출</p>
-                <p className="font-semibold text-neutral-900">
+              <div className="p-2 sm:p-3 text-center border-r border-neutral-100">
+                <p className="text-[10px] sm:text-xs text-neutral-400">매출</p>
+                <p className="font-semibold text-xs sm:text-base text-neutral-900">
                   {formatPrice(service.price * 24)}
                 </p>
               </div>
-              <div className="p-3 text-center">
-                <p className="text-xs text-neutral-400">평점</p>
-                <p className="font-semibold text-neutral-900">4.9</p>
+              <div className="p-2 sm:p-3 text-center">
+                <p className="text-[10px] sm:text-xs text-neutral-400">평점</p>
+                <p className="font-semibold text-xs sm:text-base text-neutral-900">4.9</p>
               </div>
             </div>
           </motion.div>
@@ -174,16 +176,18 @@ export default function ServicesPage() {
       {/* Add/Edit Modal */}
       <AnimatePresence>
         {showModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              style={{ willChange: 'transform, opacity' }}
+              className="bg-white rounded-t-2xl sm:rounded-3xl w-full max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-y-auto"
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-6 border-b border-neutral-100">
-                <h2 className="text-xl font-bold text-neutral-900">
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-neutral-100 sticky top-0 bg-white z-10">
+                <h2 className="text-lg sm:text-xl font-bold text-neutral-900">
                   {editingService ? '시술 수정' : '새 시술 추가'}
                 </h2>
                 <button
@@ -195,7 +199,7 @@ export default function ServicesPage() {
               </div>
 
               {/* Modal Body */}
-              <div className="p-6 space-y-5">
+              <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
                 {/* Image Upload */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -331,14 +335,14 @@ export default function ServicesPage() {
               </div>
 
               {/* Modal Footer */}
-              <div className="flex gap-3 p-6 border-t border-neutral-100">
+              <div className="flex gap-2 sm:gap-3 p-4 sm:p-6 border-t border-neutral-100 pb-safe-bottom sticky bottom-0 bg-white">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-3 bg-neutral-100 text-neutral-700 font-semibold rounded-xl hover:bg-neutral-200 transition-colors"
+                  className="flex-1 py-2.5 sm:py-3 bg-neutral-100 text-neutral-700 font-semibold rounded-lg sm:rounded-xl hover:bg-neutral-200 transition-colors text-sm sm:text-base"
                 >
                   취소
                 </button>
-                <button className="flex-1 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 transition-colors">
+                <button className="flex-1 py-2.5 sm:py-3 bg-primary-500 text-white font-semibold rounded-lg sm:rounded-xl hover:bg-primary-600 transition-colors text-sm sm:text-base">
                   {editingService ? '저장' : '추가'}
                 </button>
               </div>

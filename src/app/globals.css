@@ -78,6 +78,40 @@ body {
   }
 }
 
+/* GPU acceleration for smoother animations */
+.transform-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Prevent flickering during animations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize animation performance */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-smooth {
+    will-change: transform, opacity;
+  }
+
+  .animate-smooth-transform {
+    will-change: transform;
+  }
+}
+
+/* Fix motion animation flickering */
+[data-framer-component-type],
+[style*="opacity"],
+[style*="transform"] {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
 /* Loading skeleton animation */
 @keyframes shimmer {
   0% {
@@ -110,4 +144,14 @@ body {
 
 .h-safe-bottom {
   height: env(safe-area-inset-bottom);
+}
+
+/* Hide scrollbar for horizontal scroll areas */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

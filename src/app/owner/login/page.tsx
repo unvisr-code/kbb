@@ -40,35 +40,36 @@ export default function OwnerLoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 flex flex-col">
       {/* Decorative Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-accent-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-0 w-64 h-64 bg-primary-600/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-48 sm:w-64 lg:w-96 h-48 sm:h-64 lg:h-96 bg-primary-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-40 sm:w-56 lg:w-80 h-40 sm:h-56 lg:h-80 bg-accent-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-0 w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 bg-primary-600/5 rounded-full blur-3xl" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 flex-1 flex flex-col lg:flex-row">
         {/* Left Side - Branding */}
-        <div className="flex-1 flex flex-col justify-center px-8 py-12 lg:px-16">
+        <div className="flex-1 flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-12 lg:px-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
+            style={{ willChange: 'transform, opacity' }}
           >
             {/* Logo */}
-            <div className="flex items-center gap-3 mb-12">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/30">
-                <Sparkles className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-2.5 sm:gap-3 mb-6 sm:mb-8 lg:mb-12">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/30">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div>
-                <h1 className="font-display text-2xl font-bold text-white">
+                <h1 className="font-display text-xl sm:text-2xl font-bold text-white">
                   K-Beauty
                 </h1>
-                <p className="text-xs text-neutral-400">For Business</p>
+                <p className="text-[10px] sm:text-xs text-neutral-400">For Business</p>
               </div>
             </div>
 
             {/* Headline */}
-            <h2 className="font-display text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               당신의 네일샵,
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-rose-400">
@@ -77,26 +78,27 @@ export default function OwnerLoginPage() {
               과 만나세요
             </h2>
 
-            <p className="text-lg text-neutral-400 mb-12 max-w-md">
+            <p className="text-sm sm:text-base lg:text-lg text-neutral-400 mb-6 sm:mb-8 lg:mb-12 max-w-md">
               K-Beauty 파트너가 되어 전 세계 고객들에게 당신의 서비스를 선보이세요.
             </p>
 
-            {/* Features */}
-            <div className="space-y-6">
+            {/* Features - Hidden on very small screens, shown as compact list on mobile */}
+            <div className="hidden sm:block space-y-4 lg:space-y-6">
               {features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + index * 0.1 }}
-                  className="flex items-start gap-4"
+                  style={{ willChange: 'transform, opacity' }}
+                  className="flex items-start gap-3 lg:gap-4"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
-                    <feature.icon className="w-5 h-5 text-primary-400" />
+                  <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                    <feature.icon className="w-4 h-4 lg:w-5 lg:h-5 text-primary-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white mb-1">{feature.title}</h3>
-                    <p className="text-sm text-neutral-400">{feature.description}</p>
+                    <h3 className="font-semibold text-white text-sm lg:text-base mb-0.5 lg:mb-1">{feature.title}</h3>
+                    <p className="text-xs lg:text-sm text-neutral-400">{feature.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -105,32 +107,33 @@ export default function OwnerLoginPage() {
         </div>
 
         {/* Right Side - Login Form */}
-        <div className="lg:w-[480px] flex items-center justify-center p-8">
+        <div className="lg:w-[480px] flex items-center justify-center p-4 sm:p-6 lg:p-8 pb-8 sm:pb-8">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
+            style={{ willChange: 'transform, opacity' }}
             className="w-full max-w-sm"
           >
-            <div className="bg-white rounded-3xl p-8 shadow-2xl">
-              <div className="text-center mb-8">
-                <h3 className="font-display text-2xl font-bold text-neutral-900 mb-2">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 shadow-2xl">
+              <div className="text-center mb-5 sm:mb-6 lg:mb-8">
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-neutral-900 mb-1.5 sm:mb-2">
                   파트너 로그인
                 </h3>
-                <p className="text-neutral-500">
+                <p className="text-sm sm:text-base text-neutral-500">
                   소셜 계정으로 간편하게 시작하세요
                 </p>
               </div>
 
               {/* Social Login Buttons */}
-              <div className="space-y-3">
+              <div className="space-y-2.5 sm:space-y-3">
                 {/* Kakao Login */}
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                   onClick={() => handleLogin('kakao')}
                   disabled={isLoading !== null}
-                  className="w-full flex items-center justify-center gap-3 py-4 bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] font-semibold rounded-2xl transition-colors disabled:opacity-70"
+                  className="w-full flex items-center justify-center gap-2.5 sm:gap-3 py-3 sm:py-3.5 lg:py-4 bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] font-semibold rounded-xl sm:rounded-2xl transition-colors disabled:opacity-70 text-sm sm:text-base"
                 >
                   {isLoading === 'kakao' ? (
                     <div className="w-5 h-5 border-2 border-[#191919]/30 border-t-[#191919] rounded-full animate-spin" />
@@ -144,11 +147,11 @@ export default function OwnerLoginPage() {
 
                 {/* Google Login */}
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                   onClick={() => handleLogin('google')}
                   disabled={isLoading !== null}
-                  className="w-full flex items-center justify-center gap-3 py-4 bg-white hover:bg-neutral-50 border-2 border-neutral-200 text-neutral-700 font-semibold rounded-2xl transition-colors disabled:opacity-70"
+                  className="w-full flex items-center justify-center gap-2.5 sm:gap-3 py-3 sm:py-3.5 lg:py-4 bg-white hover:bg-neutral-50 border-2 border-neutral-200 text-neutral-700 font-semibold rounded-xl sm:rounded-2xl transition-colors disabled:opacity-70 text-sm sm:text-base"
                 >
                   {isLoading === 'google' ? (
                     <div className="w-5 h-5 border-2 border-neutral-300 border-t-neutral-600 rounded-full animate-spin" />
@@ -177,7 +180,7 @@ export default function OwnerLoginPage() {
               </div>
 
               {/* Divider */}
-              <div className="flex items-center gap-4 my-6">
+              <div className="flex items-center gap-3 sm:gap-4 my-4 sm:my-5 lg:my-6">
                 <div className="flex-1 h-px bg-neutral-200" />
                 <span className="text-xs text-neutral-400">또는</span>
                 <div className="flex-1 h-px bg-neutral-200" />
@@ -186,7 +189,7 @@ export default function OwnerLoginPage() {
               {/* New Partner */}
               <Link
                 href="/owner/onboarding"
-                className="block w-full py-4 text-center bg-neutral-900 hover:bg-neutral-800 text-white font-semibold rounded-2xl transition-colors"
+                className="block w-full py-3 sm:py-3.5 lg:py-4 text-center bg-neutral-900 hover:bg-neutral-800 text-white font-semibold rounded-xl sm:rounded-2xl transition-colors text-sm sm:text-base"
               >
                 <span className="flex items-center justify-center gap-2">
                   새로운 파트너 등록
@@ -195,7 +198,7 @@ export default function OwnerLoginPage() {
               </Link>
 
               {/* Terms */}
-              <p className="text-xs text-neutral-400 text-center mt-6">
+              <p className="text-[10px] sm:text-xs text-neutral-400 text-center mt-4 sm:mt-5 lg:mt-6 leading-relaxed">
                 로그인하면{' '}
                 <Link href="#" className="text-primary-500 hover:underline">
                   서비스 이용약관
@@ -209,7 +212,7 @@ export default function OwnerLoginPage() {
             </div>
 
             {/* Customer Link */}
-            <p className="text-center text-neutral-400 text-sm mt-6">
+            <p className="text-center text-neutral-400 text-xs sm:text-sm mt-4 sm:mt-6">
               고객으로 예약하시려면?{' '}
               <Link href="/" className="text-primary-400 hover:text-primary-300 font-medium">
                 고객 페이지로 이동
