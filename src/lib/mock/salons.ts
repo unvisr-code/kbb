@@ -12,11 +12,11 @@ export const mockSalons: Salon[] = [
     region: 'gangnam',
     phone: '02-1234-5678',
     images: [
-      'https://images.unsplash.com/photo-1610992015732-2449b0dd2b8f?w=800',
       'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800',
       'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
+      'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=800',
     ],
-    thumbnail: 'https://images.unsplash.com/photo-1610992015732-2449b0dd2b8f?w=400',
+    thumbnail: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400',
     rating: 4.8,
     reviewCount: 127,
     isForeignerFriendly: true,

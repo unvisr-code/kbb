@@ -53,7 +53,7 @@ export function OwnerSidebar() {
   const { owner, logoutOwner } = useAuthStore();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-neutral-200 h-screen sticky top-0">
+    <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-neutral-200 h-screen fixed top-0 left-0 z-40">
       {/* Logo */}
       <div className="p-6 border-b border-neutral-100">
         <Link href="/owner/dashboard" className="flex items-center gap-2">

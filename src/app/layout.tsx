@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://k-booking.beauty"),
+  metadataBase: new URL("https://kbb-xi.vercel.app"),
   alternates: {
     canonical: "/",
     languages: {
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://k-booking.beauty",
+    url: "https://kbb-xi.vercel.app",
     siteName: "K-Booking Beauty",
     title: "K-Booking Beauty | Find Your Perfect Nail Salon in Korea",
     description: "Discover and book foreigner-friendly nail salons in Korea. English-speaking staff, stunning K-beauty nail art, easy online booking in Seoul, Hongdae, Gangnam.",

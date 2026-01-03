@@ -1,5 +1,18 @@
 import { Booking, TimeSlot, DEPOSIT_AMOUNT } from '@/types';
 
+// Helper to generate dynamic dates relative to now
+const hoursAgo = (hours: number): string => {
+  const date = new Date();
+  date.setHours(date.getHours() - hours);
+  return date.toISOString();
+};
+
+const daysFromNow = (days: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString().split('T')[0];
+};
+
 export const mockBookings: Booking[] = [
   {
     id: 'booking-001',
@@ -12,7 +25,7 @@ export const mockBookings: Booking[] = [
       email: 'emily@example.com',
       countryCode: '+1',
     },
-    requestedDate: '2025-01-20',
+    requestedDate: daysFromNow(3),
     requestedTime: '14:00',
     status: 'waiting_confirmation',
     totalPrice: 85000,
@@ -22,8 +35,8 @@ export const mockBookings: Booking[] = [
     paymentStatus: 'paid',
     customerRequest: 'I would like a soft pink color with some sparkle if possible!',
     rejectionReason: null,
-    createdAt: '2025-01-15T10:25:00Z',
-    depositPaidAt: '2025-01-15T10:30:00Z',
+    createdAt: hoursAgo(2),
+    depositPaidAt: hoursAgo(2),
   },
   {
     id: 'booking-002',
@@ -61,7 +74,7 @@ export const mockBookings: Booking[] = [
       email: 'yuki@example.jp',
       countryCode: '+81',
     },
-    requestedDate: '2025-01-25',
+    requestedDate: daysFromNow(7),
     requestedTime: '13:00',
     status: 'waiting_confirmation',
     totalPrice: 120000,
@@ -71,8 +84,8 @@ export const mockBookings: Booking[] = [
     paymentStatus: 'paid',
     customerRequest: 'Getting married next month! Looking for elegant pearl designs.',
     rejectionReason: null,
-    createdAt: '2025-01-15T09:00:00Z',
-    depositPaidAt: '2025-01-15T09:10:00Z',
+    createdAt: hoursAgo(5),
+    depositPaidAt: hoursAgo(5),
   },
   {
     id: 'booking-004',
@@ -136,7 +149,7 @@ export const mockBookings: Booking[] = [
       email: 'jessica.park@example.com',
       countryCode: '+64',
     },
-    requestedDate: '2025-01-22',
+    requestedDate: daysFromNow(4),
     requestedTime: '15:00',
     status: 'waiting_confirmation',
     totalPrice: 35000,
@@ -146,8 +159,8 @@ export const mockBookings: Booking[] = [
     paymentStatus: 'paid',
     customerRequest: 'First time in Korea! Would love a trendy design.',
     rejectionReason: null,
-    createdAt: '2025-01-18T14:00:00Z',
-    depositPaidAt: '2025-01-18T14:05:00Z',
+    createdAt: hoursAgo(8),
+    depositPaidAt: hoursAgo(8),
   },
   {
     id: 'booking-007',
@@ -236,7 +249,7 @@ export const mockBookings: Booking[] = [
       email: 'mia.thompson@example.com',
       countryCode: '+1',
     },
-    requestedDate: '2025-01-26',
+    requestedDate: daysFromNow(8),
     requestedTime: '17:00',
     status: 'waiting_confirmation',
     totalPrice: 48000,
@@ -246,8 +259,8 @@ export const mockBookings: Booking[] = [
     paymentStatus: 'paid',
     customerRequest: 'Something that matches my new dress - burgundy!',
     rejectionReason: null,
-    createdAt: '2025-01-19T11:00:00Z',
-    depositPaidAt: '2025-01-19T11:10:00Z',
+    createdAt: hoursAgo(12),
+    depositPaidAt: hoursAgo(12),
   },
 ];
 
