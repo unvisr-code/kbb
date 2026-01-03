@@ -16,8 +16,6 @@ import { getBookings, getServiceById } from '@/lib/mock';
 import { Booking, BOOKING_STATUS_LABELS } from '@/types';
 import { formatPrice, cn } from '@/lib/utils';
 
-// Get pending bookings
-const getPendingBookings = () => getBookings().filter((b) => b.status === 'waiting_confirmation');
 
 // Countdown timer component
 function CountdownTimer({ createdAt }: { createdAt: string }) {
@@ -59,8 +57,26 @@ function CountdownTimer({ createdAt }: { createdAt: string }) {
 }
 
 export default function BookingRequestsPage() {
-  const [filter, setFilter] = useState<'all' | 'today' | 'urgent'>('all');
-  const pendingBookings = getPendingBookings();
+  const [statusFilter, setStatusFilter] = useState<'waiting' | 'confirmed' | 'completed'>('waiting');
+  const [timeFilter, setTimeFilter] = useState<'all' | 'today' | 'urgent'>('all');
+
+  // Get bookings based on status filter
+  const getFilteredBookings = () => {
+    const allBookings = getBookings();
+    let filtered: Booking[] = [];
+
+    if (statusFilter === 'waiting') {
+      filtered = allBookings.filter((b) => b.status === 'waiting_confirmation');
+    } else if (statusFilter === 'confirmed') {
+      filtered = allBookings.filter((b) => b.status === 'confirmed');
+    } else {
+      filtered = allBookings.filter((b) => b.status === 'completed' || b.status === 'no_show');
+    }
+
+    return filtered;
+  };
+
+  const filteredBookings = getFilteredBookings();
 
   const formatBookingDate = (dateStr: string): string => {
     return new Date(dateStr).toLocaleDateString('ko-KR', {
@@ -83,39 +99,88 @@ export default function BookingRequestsPage() {
 
         {/* Stats */}
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-xl">
-            <AlertCircle className="w-5 h-5 text-amber-500" />
-            <span className="font-semibold text-amber-700">
-              {pendingBookings.length}건 대기 중
+          <div className={cn(
+            'flex items-center gap-2 px-4 py-2 rounded-xl',
+            statusFilter === 'waiting' && 'bg-amber-50',
+            statusFilter === 'confirmed' && 'bg-green-50',
+            statusFilter === 'completed' && 'bg-blue-50'
+          )}>
+            <AlertCircle className={cn(
+              'w-5 h-5',
+              statusFilter === 'waiting' && 'text-amber-500',
+              statusFilter === 'confirmed' && 'text-green-500',
+              statusFilter === 'completed' && 'text-blue-500'
+            )} />
+            <span className={cn(
+              'font-semibold',
+              statusFilter === 'waiting' && 'text-amber-700',
+              statusFilter === 'confirmed' && 'text-green-700',
+              statusFilter === 'completed' && 'text-blue-700'
+            )}>
+              {filteredBookings.length}건
+              {statusFilter === 'waiting' ? ' 대기 중' :
+               statusFilter === 'confirmed' ? ' 예정' : ' 완료'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
+      {/* Status Filters */}
+      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
         {[
-          { key: 'all', label: '전체' },
-          { key: 'today', label: '오늘 예약' },
-          { key: 'urgent', label: '긴급 (1시간 이내)' },
+          { key: 'waiting', label: '대기 중', count: getBookings().filter(b => b.status === 'waiting_confirmation').length },
+          { key: 'confirmed', label: '확정', count: getBookings().filter(b => b.status === 'confirmed').length },
+          { key: 'completed', label: '완료', count: getBookings().filter(b => b.status === 'completed' || b.status === 'no_show').length },
         ].map((item) => (
           <button
             key={item.key}
-            onClick={() => setFilter(item.key as typeof filter)}
+            onClick={() => setStatusFilter(item.key as typeof statusFilter)}
             className={cn(
-              'px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors',
-              filter === item.key
+              'px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-2',
+              statusFilter === item.key
                 ? 'bg-primary-500 text-white'
                 : 'bg-white text-neutral-600 hover:bg-neutral-50 border border-neutral-200'
             )}
           >
             {item.label}
+            <span className={cn(
+              'text-xs px-1.5 py-0.5 rounded-full',
+              statusFilter === item.key
+                ? 'bg-white/20'
+                : 'bg-neutral-100'
+            )}>
+              {item.count}
+            </span>
           </button>
         ))}
       </div>
 
+      {/* Time Filters (for waiting status) */}
+      {statusFilter === 'waiting' && (
+        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
+          {[
+            { key: 'all', label: '전체' },
+            { key: 'today', label: '오늘 예약' },
+            { key: 'urgent', label: '긴급 (1시간 이내)' },
+          ].map((item) => (
+            <button
+              key={item.key}
+              onClick={() => setTimeFilter(item.key as typeof timeFilter)}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors',
+                timeFilter === item.key
+                  ? 'bg-neutral-900 text-white'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              )}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Booking Cards */}
-      {pendingBookings.length === 0 ? (
+      {filteredBookings.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -125,16 +190,18 @@ export default function BookingRequestsPage() {
             <Bell className="w-8 h-8 text-neutral-400" />
           </div>
           <h3 className="font-semibold text-neutral-900 mb-2">
-            새로운 예약 요청이 없습니다
+            {statusFilter === 'waiting' ? '새로운 예약 요청이 없습니다' :
+             statusFilter === 'confirmed' ? '확정된 예약이 없습니다' : '완료된 예약이 없습니다'}
           </h3>
           <p className="text-neutral-500">
-            새 예약 요청이 들어오면 알림을 보내드립니다
+            {statusFilter === 'waiting' ? '새 예약 요청이 들어오면 알림을 보내드립니다' :
+             statusFilter === 'confirmed' ? '예약이 승인되면 여기에 표시됩니다' : '시술이 완료되면 여기에 표시됩니다'}
           </p>
         </motion.div>
       ) : (
         <div className="space-y-4">
           <AnimatePresence>
-            {pendingBookings.map((booking, index) => {
+            {filteredBookings.map((booking, index) => {
               const service = getServiceById(booking.serviceId);
 
               return (

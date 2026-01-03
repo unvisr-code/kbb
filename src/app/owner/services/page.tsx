@@ -143,6 +143,9 @@ export default function ServicesPage() {
                   <span className="font-semibold text-neutral-900">
                     {formatPrice(service.price)}
                   </span>
+                  <span className="text-xs text-primary-500 bg-primary-50 px-2 py-0.5 rounded-full">
+                    예약금 {formatPrice(DEPOSIT_AMOUNT)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -284,6 +287,35 @@ export default function ServicesPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Deposit Info (Fixed) */}
+                <div className="bg-primary-50 rounded-xl p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-primary-700">예약금</p>
+                      <p className="text-xs text-primary-500 mt-0.5">고객이 예약 시 결제하는 금액</p>
+                    </div>
+                    <p className="text-lg font-bold text-primary-600">{formatPrice(DEPOSIT_AMOUNT)}</p>
+                  </div>
+                  <p className="text-xs text-primary-500 mt-2">
+                    * 예약금은 {formatPrice(DEPOSIT_AMOUNT)}으로 고정되어 있습니다
+                  </p>
+                </div>
+
+                {/* Active Toggle */}
+                <label className="flex items-center gap-3 cursor-pointer p-4 bg-neutral-50 rounded-xl">
+                  <input
+                    type="checkbox"
+                    defaultChecked={editingService?.isActive ?? true}
+                    className="w-5 h-5 rounded border-neutral-300 text-green-500 focus:ring-green-500"
+                  />
+                  <div>
+                    <span className="text-sm font-medium text-neutral-900">
+                      시술 활성화
+                    </span>
+                    <p className="text-xs text-neutral-500">비활성화 시 고객에게 표시되지 않습니다</p>
+                  </div>
+                </label>
 
                 {/* Featured Toggle */}
                 <label className="flex items-center gap-3 cursor-pointer">

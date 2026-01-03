@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Star, MapPin, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -16,17 +16,48 @@ interface SalonCardProps {
 export function SalonCard({ salon, index = 0 }: SalonCardProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
-  const nextImage = (e: React.MouseEvent) => {
+  const nextImage = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setCurrentImage((prev) => (prev + 1) % salon.images.length);
   };
 
-  const prevImage = (e: React.MouseEvent) => {
+  const prevImage = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setCurrentImage((prev) => (prev - 1 + salon.images.length) % salon.images.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartX.current || !touchEndX.current) return;
+
+    const diff = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(diff) > minSwipeDistance) {
+      if (diff > 0) {
+        // Swipe left - next image
+        setCurrentImage((prev) => (prev + 1) % salon.images.length);
+      } else {
+        // Swipe right - previous image
+        setCurrentImage((prev) => (prev - 1 + salon.images.length) % salon.images.length);
+      }
+      e.preventDefault();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
   return (
@@ -48,7 +79,12 @@ export function SalonCard({ salon, index = 0 }: SalonCardProps) {
           transition={{ duration: 0.3 }}
         >
           {/* Image Container */}
-          <div className="relative aspect-[4/3] overflow-hidden">
+          <div
+            className="relative aspect-[4/3] overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             {/* Main Image */}
             <motion.div
               className="absolute inset-0"
@@ -68,33 +104,34 @@ export function SalonCard({ salon, index = 0 }: SalonCardProps) {
             {/* Image Navigation - Only show if multiple images */}
             {salon.images.length > 1 && (
               <>
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: isHovered ? 1 : 0 }}
+                <button
                   onClick={prevImage}
-                  className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+                  className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white active:scale-95 transition-all sm:opacity-0 sm:group-hover:opacity-100"
                 >
                   <ChevronLeft className="w-5 h-5 sm:w-4 sm:h-4 text-neutral-700" />
-                </motion.button>
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: isHovered ? 1 : 0 }}
+                </button>
+                <button
                   onClick={nextImage}
-                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white active:scale-95 transition-all sm:opacity-0 sm:group-hover:opacity-100"
                 >
                   <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4 text-neutral-700" />
-                </motion.button>
+                </button>
 
                 {/* Image Dots */}
                 <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-1.5">
                   {salon.images.map((_, idx) => (
-                    <motion.div
+                    <button
                       key={idx}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setCurrentImage(idx);
+                      }}
                       className={cn(
-                        'w-1.5 h-1.5 rounded-full transition-all duration-300',
+                        'h-1.5 rounded-full transition-all duration-300',
                         idx === currentImage
                           ? 'bg-white w-4'
-                          : 'bg-white/50'
+                          : 'bg-white/50 w-1.5 hover:bg-white/70'
                       )}
                     />
                   ))}

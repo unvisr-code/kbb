@@ -10,6 +10,8 @@ import {
   CheckCircle2,
   ChevronDown,
   Search,
+  UserX,
+  Loader2,
 } from 'lucide-react';
 import { getBookings, getServiceById } from '@/lib/mock';
 import { Booking } from '@/types';
@@ -41,7 +43,29 @@ const groupByDate = (bookings: Booking[]) => {
 export default function ConfirmedBookingsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedDates, setExpandedDates] = useState<string[]>([]);
+  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [processingAction, setProcessingAction] = useState<'complete' | 'no_show' | null>(null);
   const confirmedBookings = getConfirmedBookings();
+
+  const handleComplete = async (bookingId: string) => {
+    setProcessingId(bookingId);
+    setProcessingAction('complete');
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setProcessingId(null);
+    setProcessingAction(null);
+    // In real implementation, refresh the list
+  };
+
+  const handleNoShow = async (bookingId: string) => {
+    setProcessingId(bookingId);
+    setProcessingAction('no_show');
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setProcessingId(null);
+    setProcessingAction(null);
+    // In real implementation, refresh the list
+  };
 
   const groupedBookings = groupByDate(confirmedBookings);
 
@@ -220,13 +244,50 @@ export default function ConfirmedBookingsPage() {
                             </p>
                           </div>
 
-                          {/* Call Button */}
-                          <a
-                            href={`tel:${booking.customerInfo.phone}`}
-                            className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-primary-100 flex items-center justify-center transition-colors"
-                          >
-                            <Phone className="w-4 h-4 text-neutral-600" />
-                          </a>
+                          {/* Action Buttons */}
+                          <div className="flex items-center gap-2">
+                            {/* Call Button */}
+                            <a
+                              href={`tel:${booking.customerInfo.phone}`}
+                              className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-primary-100 flex items-center justify-center transition-colors"
+                            >
+                              <Phone className="w-4 h-4 text-neutral-600" />
+                            </a>
+
+                            {/* Complete Button */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleComplete(booking.id);
+                              }}
+                              disabled={processingId === booking.id}
+                              className="px-3 py-2 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1"
+                            >
+                              {processingId === booking.id && processingAction === 'complete' ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                              )}
+                              완료
+                            </button>
+
+                            {/* No Show Button */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleNoShow(booking.id);
+                              }}
+                              disabled={processingId === booking.id}
+                              className="px-3 py-2 bg-neutral-200 hover:bg-red-100 hover:text-red-600 text-neutral-600 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1"
+                            >
+                              {processingId === booking.id && processingAction === 'no_show' ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <UserX className="w-3.5 h-3.5" />
+                              )}
+                              노쇼
+                            </button>
+                          </div>
                         </div>
                       );
                     })}

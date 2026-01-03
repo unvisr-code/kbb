@@ -222,7 +222,7 @@ export default function HomePage() {
       </section>
 
       {/* Filter Bar */}
-      <section className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-neutral-100">
+      <section className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-neutral-100 relative">
         <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-4">
             {/* Left Filters */}
@@ -253,34 +253,6 @@ export default function HomePage() {
                   )} />
                 </button>
 
-                <AnimatePresence>
-                  {isRegionOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-xl border border-neutral-100 py-2 min-w-[180px] z-50"
-                    >
-                      {REGIONS.map((region) => (
-                        <button
-                          key={region.value}
-                          onClick={() => {
-                            setSelectedRegion(region.value);
-                            setIsRegionOpen(false);
-                          }}
-                          className={cn(
-                            'w-full px-4 py-2.5 text-left text-sm transition-colors',
-                            selectedRegion === region.value
-                              ? 'bg-primary-50 text-primary-600 font-medium'
-                              : 'text-neutral-700 hover:bg-neutral-50'
-                          )}
-                        >
-                          {region.label}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
 
               {/* Sort Dropdown */}
@@ -305,34 +277,6 @@ export default function HomePage() {
                   )} />
                 </button>
 
-                <AnimatePresence>
-                  {isSortOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-xl border border-neutral-100 py-2 min-w-[200px] z-50"
-                    >
-                      {SORT_OPTIONS.map((option) => (
-                        <button
-                          key={option.value}
-                          onClick={() => {
-                            setSortBy(option.value);
-                            setIsSortOpen(false);
-                          }}
-                          className={cn(
-                            'w-full px-4 py-2.5 text-left text-sm transition-colors',
-                            sortBy === option.value
-                              ? 'bg-primary-50 text-primary-600 font-medium'
-                              : 'text-neutral-700 hover:bg-neutral-50'
-                          )}
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
 
               {/* Foreigner Friendly Toggle */}
@@ -356,6 +300,66 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+
+        {/* Region Dropdown Menu - Outside overflow container */}
+        <AnimatePresence>
+          {isRegionOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute left-3 sm:left-4 top-full mt-1 bg-white rounded-xl shadow-2xl border border-neutral-200 py-2 min-w-[180px] z-[100]"
+            >
+              {REGIONS.map((region) => (
+                <button
+                  key={region.value}
+                  onClick={() => {
+                    setSelectedRegion(region.value);
+                    setIsRegionOpen(false);
+                  }}
+                  className={cn(
+                    'w-full px-4 py-2.5 text-left text-sm transition-colors',
+                    selectedRegion === region.value
+                      ? 'bg-primary-50 text-primary-600 font-medium'
+                      : 'text-neutral-700 hover:bg-neutral-50'
+                  )}
+                >
+                  {region.label}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Sort Dropdown Menu - Outside overflow container */}
+        <AnimatePresence>
+          {isSortOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute left-3 sm:left-[180px] top-full mt-1 bg-white rounded-xl shadow-2xl border border-neutral-200 py-2 min-w-[200px] z-[100]"
+            >
+              {SORT_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    setSortBy(option.value);
+                    setIsSortOpen(false);
+                  }}
+                  className={cn(
+                    'w-full px-4 py-2.5 text-left text-sm transition-colors',
+                    sortBy === option.value
+                      ? 'bg-primary-50 text-primary-600 font-medium'
+                      : 'text-neutral-700 hover:bg-neutral-50'
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
       {/* Click outside to close dropdowns */}

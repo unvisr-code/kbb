@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
@@ -51,6 +51,10 @@ export default function SalonDetailPage() {
   const [activeTab, setActiveTab] = useState<TabType>('services');
   const [isHoursExpanded, setIsHoursExpanded] = useState(false);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   const { setSelectedSalon, setSelectedService: storeSetService } = useBookingStore();
 
@@ -92,6 +96,55 @@ export default function SalonDetailPage() {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current || !salon) return;
+
+    const diff = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(diff) > minSwipeDistance) {
+      if (diff > 0) {
+        setCurrentImage((prev) => (prev + 1) % salon.images.length);
+      } else {
+        setCurrentImage((prev) => (prev - 1 + salon.images.length) % salon.images.length);
+      }
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
+  const handleLike = () => {
+    setIsLiked(!isLiked);
+  };
+
+  const handleShare = async () => {
+    if (!salon) return;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: salon.name,
+          text: salon.description,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('Share cancelled');
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  };
+
   if (!salon) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -103,7 +156,12 @@ export default function SalonDetailPage() {
   return (
     <div className="min-h-screen bg-neutral-50 pb-40">
       {/* Hero Image Gallery */}
-      <section className="relative h-[50vh] md:h-[60vh] overflow-hidden">
+      <section
+        className="relative h-[50vh] md:h-[60vh] overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="absolute inset-0">
           <img
             src={salon.images[currentImage]}
@@ -120,7 +178,7 @@ export default function SalonDetailPage() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               onClick={() => router.back()}
-              className="flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg"
+              className="flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg active:scale-95 transition-transform"
             >
               <ChevronLeft className="w-5 h-5 text-neutral-700" />
             </motion.button>
@@ -130,7 +188,8 @@ export default function SalonDetailPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
-                className="flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg"
+                onClick={handleShare}
+                className="flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg active:scale-95 transition-transform"
               >
                 <Share2 className="w-5 h-5 text-neutral-700" />
               </motion.button>
@@ -138,9 +197,13 @@ export default function SalonDetailPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.15 }}
-                className="flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg"
+                onClick={handleLike}
+                className="flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg active:scale-95 transition-transform"
               >
-                <Heart className="w-5 h-5 text-neutral-700" />
+                <Heart className={cn(
+                  'w-5 h-5 transition-colors',
+                  isLiked ? 'fill-red-500 text-red-500' : 'text-neutral-700'
+                )} />
               </motion.button>
             </div>
           </div>

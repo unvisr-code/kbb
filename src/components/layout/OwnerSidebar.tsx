@@ -4,22 +4,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import {
-  LayoutDashboard,
   Scissors,
   CalendarCheck,
   CalendarClock,
   Wallet,
-  Settings,
   LogOut,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 
 const menuItems = [
-  {
-    href: '/owner/dashboard',
-    label: '대시보드',
-    icon: LayoutDashboard,
-  },
   {
     href: '/owner/services',
     label: '시술 관리',
@@ -41,11 +34,6 @@ const menuItems = [
     label: '정산',
     icon: Wallet,
   },
-  {
-    href: '/owner/settings',
-    label: '설정',
-    icon: Settings,
-  },
 ];
 
 export function OwnerSidebar() {
@@ -56,7 +44,7 @@ export function OwnerSidebar() {
     <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-neutral-200 h-screen fixed top-0 left-0 z-40">
       {/* Logo */}
       <div className="p-6 border-b border-neutral-100">
-        <Link href="/owner/dashboard" className="flex items-center gap-2">
+        <Link href="/owner/bookings/requests" className="flex items-center gap-2">
           <div className="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center">
             <span className="text-white font-bold text-lg">K</span>
           </div>
