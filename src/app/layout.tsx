@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Poppins, Playfair_Display, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 
+// Pretendard font via CDN (added in head)
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -120,6 +122,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${poppins.variable} ${playfair.variable} ${notoSansKr.variable}`}>
+      <head>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+        />
+      </head>
       <body className="font-sans antialiased bg-neutral-50 text-neutral-900 min-h-screen">
         {children}
       </body>

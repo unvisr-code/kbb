@@ -14,21 +14,24 @@ export default function OwnerLayout({
   const isAuthPage = pathname === '/owner/login' || pathname === '/owner/onboarding';
 
   if (isAuthPage) {
-    return <>{children}</>;
+    return <div style={{ letterSpacing: '-0.03em' }}>{children}</div>;
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-neutral-50" style={{ letterSpacing: '-0.03em' }}>
       {/* Desktop Sidebar */}
       <OwnerSidebar />
 
-      {/* Mobile Header */}
-      <OwnerHeader />
+      {/* Mobile Header + Main Content Container */}
+      <div className="lg:ml-64">
+        {/* Mobile Header */}
+        <OwnerHeader />
 
-      {/* Main Content */}
-      <main className="lg:ml-64 pt-16 lg:pt-0">
-        {children}
-      </main>
+        {/* Main Content */}
+        <main>
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
