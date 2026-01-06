@@ -17,14 +17,16 @@ import {
   RefreshCw,
   Sparkles,
   AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { useBookingStore } from '@/stores/bookingStore';
 import { formatPrice, formatDuration } from '@/lib/utils';
 import { DEPOSIT_AMOUNT } from '@/types';
 import confetti from 'canvas-confetti';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
+import html2canvas from 'html2canvas';
 
 export default function ResultPage() {
   const params = useParams();
@@ -36,6 +38,66 @@ export default function ResultPage() {
   const { selectedSalon, selectedService, selectedDate, selectedTime, customerInfo, clearAll } =
     useBookingStore();
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [showSaveError, setShowSaveError] = useState(false);
+  const bookingCardRef = useRef<HTMLDivElement>(null);
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSaveImage = async () => {
+    if (!bookingCardRef.current || isSaving) return;
+
+    setIsSaving(true);
+
+    try {
+      // Wait for images to load
+      const images = bookingCardRef.current.querySelectorAll('img');
+      await Promise.all(
+        Array.from(images).map(
+          (img) =>
+            new Promise((resolve) => {
+              if (img.complete) {
+                resolve(true);
+              } else {
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(true);
+              }
+            })
+        )
+      );
+
+      const canvas = await html2canvas(bookingCardRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 3, // Higher resolution for mobile
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        width: bookingCardRef.current.offsetWidth,
+        height: bookingCardRef.current.offsetHeight,
+        onclone: (clonedDoc) => {
+          // Ensure cloned element has proper styling
+          const clonedElement = clonedDoc.querySelector('[data-booking-card]');
+          if (clonedElement) {
+            (clonedElement as HTMLElement).style.borderRadius = '24px';
+            (clonedElement as HTMLElement).style.overflow = 'hidden';
+          }
+        },
+      });
+
+      // Convert to high quality PNG
+      const url = canvas.toDataURL('image/png', 1.0);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `booking-${bookingId}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Failed to save image:', error);
+      setShowSaveError(true);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   // Confetti effect for confirmed bookings
   useEffect(() => {
@@ -139,6 +201,8 @@ export default function ResultPage() {
 
         {/* Booking Card */}
         <motion.div
+          ref={bookingCardRef}
+          data-booking-card
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
@@ -270,20 +334,16 @@ export default function ResultPage() {
                     <span className="text-xs text-neutral-600">Call</span>
                   </button>
                   <button
-                    onClick={() => {
-                      const info = `Booking Confirmation\n\nSalon: ${selectedSalon?.name || ''}\nAddress: ${selectedSalon?.address || ''}\nDate: ${selectedDate ? new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : ''}\nTime: ${selectedTime || ''}\nService: ${selectedService?.name || ''}\nPrice: ${selectedService ? formatPrice(selectedService.price) : ''}\n\nBooking ID: ${bookingId}`;
-                      const blob = new Blob([info], { type: 'text/plain' });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `booking-${bookingId}.txt`;
-                      a.click();
-                      URL.revokeObjectURL(url);
-                    }}
-                    className="flex flex-col items-center gap-2 py-4 bg-white border border-neutral-100 rounded-2xl hover:border-primary-200 transition-colors"
+                    onClick={handleSaveImage}
+                    disabled={isSaving}
+                    className="flex flex-col items-center gap-2 py-4 bg-white border border-neutral-100 rounded-2xl hover:border-primary-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Download className="w-5 h-5 text-neutral-600" />
-                    <span className="text-xs text-neutral-600">Save</span>
+                    {isSaving ? (
+                      <Loader2 className="w-5 h-5 text-primary-500 animate-spin" />
+                    ) : (
+                      <Download className="w-5 h-5 text-neutral-600" />
+                    )}
+                    <span className="text-xs text-neutral-600">{isSaving ? 'Saving...' : 'Save'}</span>
                   </button>
                   <button
                     onClick={async () => {
@@ -387,6 +447,28 @@ export default function ResultPage() {
           </p>
           <Button onClick={() => setShowComingSoon(false)} className="w-full">
             Got it
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Save Error Modal */}
+      <Modal
+        isOpen={showSaveError}
+        onClose={() => setShowSaveError(false)}
+        size="sm"
+        showCloseButton={false}
+      >
+        <div className="text-center py-4">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-8 h-8 text-red-500" />
+          </div>
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">Save Failed</h3>
+          <p className="text-neutral-500 text-sm mb-6">
+            Unable to save the image.<br />
+            Please try again.
+          </p>
+          <Button onClick={() => setShowSaveError(false)} className="w-full">
+            Try Again
           </Button>
         </div>
       </Modal>

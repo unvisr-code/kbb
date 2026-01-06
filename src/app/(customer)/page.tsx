@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, SlidersHorizontal, Sparkles, ChevronDown, X } from 'lucide-react';
+import { Search, MapPin, SlidersHorizontal, Sparkles, ChevronDown, X, User } from 'lucide-react';
+import Link from 'next/link';
 import { mockSalons } from '@/lib/mock';
 import { Region, REGION_LABELS, Salon } from '@/types';
 import { SalonCard } from '@/components/customer/SalonCard';
@@ -138,6 +139,16 @@ export default function HomePage() {
 
         {/* Content */}
         <div className="relative px-4 pt-6 pb-10 sm:pt-8 sm:pb-12 md:pt-16 md:pb-20">
+          {/* My Page Button */}
+          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
+            <Link
+              href="/mypage"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 backdrop-blur-sm shadow-lg flex items-center justify-center hover:bg-white transition-colors"
+            >
+              <User className="w-5 h-5 text-neutral-700" />
+            </Link>
+          </div>
+
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
             <motion.div
