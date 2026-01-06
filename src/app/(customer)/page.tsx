@@ -3,11 +3,11 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, MapPin, SlidersHorizontal, Sparkles, ChevronDown, X, User } from 'lucide-react';
-import Link from 'next/link';
 import { mockSalons } from '@/lib/mock';
 import { Region, REGION_LABELS, Salon } from '@/types';
 import { SalonCard } from '@/components/customer/SalonCard';
 import { cn } from '@/lib/utils';
+import { useUIStore } from '@/stores/uiStore';
 
 type SortOption = 'recommended' | 'price_low' | 'price_high' | 'rating';
 
@@ -34,6 +34,7 @@ export default function HomePage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isRegionOpen, setIsRegionOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const { openMyPage } = useUIStore();
 
   const filteredSalons = useMemo(() => {
     let salons = mockSalons.filter((salon) => salon.isActive);
@@ -141,12 +142,12 @@ export default function HomePage() {
         <div className="relative px-4 pt-6 pb-10 sm:pt-8 sm:pb-12 md:pt-16 md:pb-20">
           {/* My Page Button */}
           <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
-            <Link
-              href="/mypage"
+            <button
+              onClick={openMyPage}
               className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 backdrop-blur-sm shadow-lg flex items-center justify-center hover:bg-white transition-colors"
             >
               <User className="w-5 h-5 text-neutral-700" />
-            </Link>
+            </button>
           </div>
 
           <div className="max-w-4xl mx-auto text-center">
@@ -267,7 +268,7 @@ export default function HomePage() {
               </div>
 
               {/* Sort Dropdown */}
-              <div className="relative hidden sm:block flex-shrink-0">
+              <div className="relative flex-shrink-0">
                 <button
                   onClick={() => {
                     setIsSortOpen(!isSortOpen);
@@ -281,7 +282,8 @@ export default function HomePage() {
                   )}
                 >
                   <SlidersHorizontal className="w-4 h-4" />
-                  <span>{SORT_OPTIONS.find((o) => o.value === sortBy)?.label}</span>
+                  <span className="hidden sm:inline">{SORT_OPTIONS.find((o) => o.value === sortBy)?.label}</span>
+                  <span className="sm:hidden">Sort</span>
                   <ChevronDown className={cn(
                     'w-4 h-4 transition-transform',
                     isSortOpen && 'rotate-180'

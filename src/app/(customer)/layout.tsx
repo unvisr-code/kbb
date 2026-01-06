@@ -1,3 +1,7 @@
+'use client';
+
+import { MyPageSheet } from '@/components/customer/MyPageSheet';
+
 export default function CustomerLayout({
   children,
 }: {
@@ -6,6 +10,7 @@ export default function CustomerLayout({
   return (
     <div className="min-h-screen bg-neutral-50">
       <main>{children}</main>
+      <MyPageSheet />
     </div>
   );
 }
