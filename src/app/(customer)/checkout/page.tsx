@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, User, Mail, MessageSquare, Check, Shield, Sparkles } from 'lucide-react';
+import { ArrowLeft, User, Mail, MessageSquare, Check, Shield, Sparkles, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useBookingStore } from '@/stores/bookingStore';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
 import {
   FloatingInput,
   BookingSummaryCard,
@@ -24,6 +26,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { selectedSalon, selectedService, selectedDate, selectedTime, setCustomerInfo } =
     useBookingStore();
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const {
     register,
@@ -35,7 +38,7 @@ export default function CheckoutPage() {
     resolver: zodResolver(customerInfoSchema),
     mode: 'onChange',
     defaultValues: {
-      countryCode: '+82',
+      countryCode: '+1',
       agreeToTerms: false,
     },
   });
@@ -140,6 +143,7 @@ export default function CheckoutPage() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => setShowComingSoon(true)}
             className="w-full flex items-center justify-center gap-3 py-4 bg-white border-2 border-neutral-100 rounded-2xl hover:border-neutral-200 hover:shadow-lg transition-all"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -202,7 +206,7 @@ export default function CheckoutPage() {
 
           {/* Phone with Country Code */}
           <CountryCodePicker
-            value={watchedValues.countryCode || '+82'}
+            value={watchedValues.countryCode || '+1'}
             phoneValue={watchedValues.phone || ''}
             onChange={(code) => setValue('countryCode', code)}
             onPhoneChange={(e) => setValue('phone', e.target.value.replace(/\D/g, ''))}
@@ -296,6 +300,28 @@ export default function CheckoutPage() {
         isValid={isValid}
         onSubmit={handleSubmit(onSubmit)}
       />
+
+      {/* Coming Soon Modal */}
+      <Modal
+        isOpen={showComingSoon}
+        onClose={() => setShowComingSoon(false)}
+        size="sm"
+        showCloseButton={false}
+      >
+        <div className="text-center py-4">
+          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Clock className="w-8 h-8 text-primary-500" />
+          </div>
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">Coming Soon!</h3>
+          <p className="text-neutral-500 text-sm mb-6">
+            This feature is currently under development.<br />
+            Stay tuned for updates!
+          </p>
+          <Button onClick={() => setShowComingSoon(false)} className="w-full">
+            Got it
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

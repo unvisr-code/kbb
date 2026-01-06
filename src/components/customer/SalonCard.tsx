@@ -3,10 +3,11 @@
 import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Star, MapPin, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, MapPin, Globe, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { Salon, REGION_LABELS } from '@/types';
 import { formatPrice } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { useFavoriteStore } from '@/stores/favoriteStore';
 
 interface SalonCardProps {
   salon: Salon;
@@ -18,6 +19,15 @@ export function SalonCard({ salon, index = 0 }: SalonCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
+
+  const { favoriteIds, toggleFavorite } = useFavoriteStore();
+  const isFavorite = favoriteIds.includes(salon.id);
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(salon.id);
+  };
 
   const nextImage = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
@@ -155,6 +165,22 @@ export function SalonCard({ salon, index = 0 }: SalonCardProps) {
                 </div>
               </motion.div>
             )}
+
+            {/* Favorite Heart Button */}
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 + index * 0.1 }}
+              onClick={handleFavoriteClick}
+              className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white active:scale-95 transition-all z-10"
+            >
+              <Heart
+                className={cn(
+                  'w-5 h-5 transition-colors',
+                  isFavorite ? 'fill-red-500 text-red-500' : 'text-neutral-700'
+                )}
+              />
+            </motion.button>
 
             {/* Bottom Info on Image */}
             <div className="absolute bottom-0 left-0 right-0 p-4">

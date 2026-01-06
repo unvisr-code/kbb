@@ -25,6 +25,8 @@ import { Salon, Service, REGION_LABELS, AMENITY_LABELS, DAY_LABELS, Amenity } fr
 import { formatPrice, cn } from '@/lib/utils';
 import { ServiceCard } from '@/components/customer/ServiceCard';
 import { useBookingStore } from '@/stores/bookingStore';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
 
 const AMENITY_ICONS: Record<Amenity, React.ComponentType<{ className?: string }>> = {
   wifi: Wifi,
@@ -40,6 +42,33 @@ const AMENITY_ICONS: Record<Amenity, React.ComponentType<{ className?: string }>
 
 type TabType = 'services' | 'info' | 'reviews';
 
+interface Review {
+  id: string;
+  userName: string;
+  userAvatar: string;
+  rating: number;
+  date: string;
+  content: string;
+  images?: string[];
+  serviceName: string;
+}
+
+const MOCK_REVIEWS: Review[] = [
+  {
+    id: 'review-1',
+    userName: 'Sarah K.',
+    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+    rating: 5,
+    date: '2025-01-03',
+    content: 'Amazing experience! The stylist really understood what I wanted and the result exceeded my expectations. The salon has a very cozy atmosphere and all staff were super friendly. Will definitely come back!',
+    images: [
+      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400',
+      'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400',
+    ],
+    serviceName: 'Premium Hair Cut & Styling',
+  },
+];
+
 export default function SalonDetailPage() {
   const router = useRouter();
   const params = useParams();
@@ -52,6 +81,7 @@ export default function SalonDetailPage() {
   const [isHoursExpanded, setIsHoursExpanded] = useState(false);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
@@ -287,7 +317,10 @@ export default function SalonDetailPage() {
                 <p className="text-neutral-900 font-medium">{salon.address}</p>
                 <p className="text-sm text-neutral-500">{REGION_LABELS[salon.region].en}, Seoul</p>
               </div>
-              <button className="flex items-center gap-1.5 text-sm text-primary-500 font-medium px-3 py-2 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors">
+              <button
+                onClick={() => setShowComingSoon(true)}
+                className="flex items-center gap-1.5 text-sm text-primary-500 font-medium px-3 py-2 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+              >
                 <Navigation className="w-4 h-4" />
                 Map
               </button>
@@ -488,13 +521,73 @@ export default function SalonDetailPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="text-center py-12"
+                className="space-y-4"
               >
-                <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Star className="w-8 h-8 text-neutral-300" />
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-lg font-semibold text-neutral-900">Reviews</h2>
+                  <span className="text-sm text-neutral-500">{MOCK_REVIEWS.length} reviews</span>
                 </div>
-                <h3 className="text-lg font-semibold text-neutral-900 mb-2">No reviews yet</h3>
-                <p className="text-neutral-500">Be the first to leave a review!</p>
+
+                {MOCK_REVIEWS.map((review) => (
+                  <motion.div
+                    key={review.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-2xl p-4 shadow-sm"
+                  >
+                    {/* Review Header */}
+                    <div className="flex items-start gap-3 mb-3">
+                      <img
+                        src={review.userAvatar}
+                        alt={review.userName}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-semibold text-neutral-900">{review.userName}</h4>
+                          <span className="text-xs text-neutral-400">{review.date}</span>
+                        </div>
+                        <div className="flex items-center gap-1 mt-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={cn(
+                                'w-3.5 h-3.5',
+                                i < review.rating
+                                  ? 'text-amber-400 fill-amber-400'
+                                  : 'text-neutral-200'
+                              )}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Service Tag */}
+                    <div className="inline-block px-2.5 py-1 bg-primary-50 text-primary-600 text-xs font-medium rounded-full mb-3">
+                      {review.serviceName}
+                    </div>
+
+                    {/* Review Content */}
+                    <p className="text-neutral-600 text-sm leading-relaxed mb-3">
+                      {review.content}
+                    </p>
+
+                    {/* Review Images */}
+                    {review.images && review.images.length > 0 && (
+                      <div className="flex gap-2 overflow-x-auto pb-1">
+                        {review.images.map((image, idx) => (
+                          <img
+                            key={idx}
+                            src={image}
+                            alt={`Review photo ${idx + 1}`}
+                            className="w-24 h-24 rounded-xl object-cover flex-shrink-0"
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
               </motion.div>
             )}
           </AnimatePresence>
@@ -538,6 +631,28 @@ export default function SalonDetailPage() {
           </div>
         </motion.div>
       </AnimatePresence>
+
+      {/* Coming Soon Modal */}
+      <Modal
+        isOpen={showComingSoon}
+        onClose={() => setShowComingSoon(false)}
+        size="sm"
+        showCloseButton={false}
+      >
+        <div className="text-center py-4">
+          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Clock className="w-8 h-8 text-primary-500" />
+          </div>
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">Coming Soon!</h3>
+          <p className="text-neutral-500 text-sm mb-6">
+            This feature is currently under development.<br />
+            Stay tuned for updates!
+          </p>
+          <Button onClick={() => setShowComingSoon(false)} className="w-full">
+            Got it
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

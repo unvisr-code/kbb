@@ -31,8 +31,8 @@ export const customerInfoSchema = z.object({
 export type CustomerInfoForm = z.infer<typeof customerInfoSchema>;
 
 export const countryCodes = [
-  { code: '+82', country: 'KR', flag: '🇰🇷' },
   { code: '+1', country: 'US', flag: '🇺🇸' },
+  { code: '+82', country: 'KR', flag: '🇰🇷' },
   { code: '+44', country: 'UK', flag: '🇬🇧' },
   { code: '+81', country: 'JP', flag: '🇯🇵' },
   { code: '+86', country: 'CN', flag: '🇨🇳' },

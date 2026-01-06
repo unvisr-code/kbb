@@ -22,7 +22,9 @@ import { useBookingStore } from '@/stores/bookingStore';
 import { formatPrice, formatDuration } from '@/lib/utils';
 import { DEPOSIT_AMOUNT } from '@/types';
 import confetti from 'canvas-confetti';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
 
 export default function ResultPage() {
   const params = useParams();
@@ -33,6 +35,7 @@ export default function ResultPage() {
 
   const { selectedSalon, selectedService, selectedDate, selectedTime, customerInfo, clearAll } =
     useBookingStore();
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   // Confetti effect for confirmed bookings
   useEffect(() => {
@@ -250,21 +253,58 @@ export default function ResultPage() {
           >
             {selectedSalon && (
               <>
-                <button className="w-full flex items-center justify-center gap-3 py-4 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/30 transition-colors">
+                <button
+                  onClick={() => setShowComingSoon(true)}
+                  className="w-full flex items-center justify-center gap-3 py-4 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/30 transition-colors"
+                >
                   <Navigation className="w-5 h-5" />
                   Get Directions
                 </button>
 
                 <div className="grid grid-cols-3 gap-3">
-                  <button className="flex flex-col items-center gap-2 py-4 bg-white border border-neutral-100 rounded-2xl hover:border-primary-200 transition-colors">
+                  <button
+                    onClick={() => setShowComingSoon(true)}
+                    className="flex flex-col items-center gap-2 py-4 bg-white border border-neutral-100 rounded-2xl hover:border-primary-200 transition-colors"
+                  >
                     <Phone className="w-5 h-5 text-neutral-600" />
                     <span className="text-xs text-neutral-600">Call</span>
                   </button>
-                  <button className="flex flex-col items-center gap-2 py-4 bg-white border border-neutral-100 rounded-2xl hover:border-primary-200 transition-colors">
+                  <button
+                    onClick={() => {
+                      const info = `Booking Confirmation\n\nSalon: ${selectedSalon?.name || ''}\nAddress: ${selectedSalon?.address || ''}\nDate: ${selectedDate ? new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : ''}\nTime: ${selectedTime || ''}\nService: ${selectedService?.name || ''}\nPrice: ${selectedService ? formatPrice(selectedService.price) : ''}\n\nBooking ID: ${bookingId}`;
+                      const blob = new Blob([info], { type: 'text/plain' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `booking-${bookingId}.txt`;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    }}
+                    className="flex flex-col items-center gap-2 py-4 bg-white border border-neutral-100 rounded-2xl hover:border-primary-200 transition-colors"
+                  >
                     <Download className="w-5 h-5 text-neutral-600" />
                     <span className="text-xs text-neutral-600">Save</span>
                   </button>
-                  <button className="flex flex-col items-center gap-2 py-4 bg-white border border-neutral-100 rounded-2xl hover:border-primary-200 transition-colors">
+                  <button
+                    onClick={async () => {
+                      const shareData = {
+                        title: 'Booking Confirmation',
+                        text: `${selectedSalon?.name || ''} - ${selectedDate ? new Date(selectedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''} ${selectedTime || ''}`,
+                        url: window.location.href,
+                      };
+                      if (navigator.share) {
+                        try {
+                          await navigator.share(shareData);
+                        } catch (err) {
+                          // User cancelled or error
+                        }
+                      } else {
+                        await navigator.clipboard.writeText(window.location.href);
+                        alert('Link copied to clipboard!');
+                      }
+                    }}
+                    className="flex flex-col items-center gap-2 py-4 bg-white border border-neutral-100 rounded-2xl hover:border-primary-200 transition-colors"
+                  >
                     <Share2 className="w-5 h-5 text-neutral-600" />
                     <span className="text-xs text-neutral-600">Share</span>
                   </button>
@@ -328,6 +368,28 @@ export default function ResultPage() {
           </Link>
         </motion.div>
       </div>
+
+      {/* Coming Soon Modal */}
+      <Modal
+        isOpen={showComingSoon}
+        onClose={() => setShowComingSoon(false)}
+        size="sm"
+        showCloseButton={false}
+      >
+        <div className="text-center py-4">
+          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Clock className="w-8 h-8 text-primary-500" />
+          </div>
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">Coming Soon!</h3>
+          <p className="text-neutral-500 text-sm mb-6">
+            This feature is currently under development.<br />
+            Stay tuned for updates!
+          </p>
+          <Button onClick={() => setShowComingSoon(false)} className="w-full">
+            Got it
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

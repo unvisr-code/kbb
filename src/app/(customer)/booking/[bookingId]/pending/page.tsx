@@ -17,6 +17,8 @@ import {
 import { useBookingStore } from '@/stores/bookingStore';
 import { formatPrice, formatDuration } from '@/lib/utils';
 import { DEPOSIT_AMOUNT } from '@/types';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
 
 export default function PendingPage() {
   const params = useParams();
@@ -26,6 +28,7 @@ export default function PendingPage() {
     useBookingStore();
 
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   // Simulated timer
   useEffect(() => {
@@ -271,7 +274,10 @@ export default function PendingPage() {
                 <CheckCircle2 className="w-3 h-3 text-white" />
               </div>
             </div>
-            <button className="flex items-center justify-between w-full p-3 bg-neutral-50 rounded-xl hover:bg-neutral-100 transition-colors">
+            <button
+              onClick={() => setShowComingSoon(true)}
+              className="flex items-center justify-between w-full p-3 bg-neutral-50 rounded-xl hover:bg-neutral-100 transition-colors"
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-accent-100 flex items-center justify-center">
                   <Bell className="w-5 h-5 text-accent-600" />
@@ -293,10 +299,13 @@ export default function PendingPage() {
           transition={{ delay: 0.6 }}
           className="text-center"
         >
-          <button className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-primary-500 transition-colors">
+          <a
+            href={`mailto:support@kbeautybook.com?subject=Booking Support - ${bookingId}`}
+            className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-primary-500 transition-colors"
+          >
             <MessageCircle className="w-4 h-4" />
             Need help? Contact support
-          </button>
+          </a>
         </motion.div>
 
         {/* Demo Note */}
@@ -309,6 +318,28 @@ export default function PendingPage() {
           Demo: Auto-redirecting to result in {Math.max(0, 10 - timeElapsed)}s...
         </motion.p>
       </div>
+
+      {/* Coming Soon Modal */}
+      <Modal
+        isOpen={showComingSoon}
+        onClose={() => setShowComingSoon(false)}
+        size="sm"
+        showCloseButton={false}
+      >
+        <div className="text-center py-4">
+          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Clock className="w-8 h-8 text-primary-500" />
+          </div>
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">Coming Soon!</h3>
+          <p className="text-neutral-500 text-sm mb-6">
+            This feature is currently under development.<br />
+            Stay tuned for updates!
+          </p>
+          <Button onClick={() => setShowComingSoon(false)} className="w-full">
+            Got it
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }
