@@ -53,7 +53,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['var(--font-poppins)', 'var(--font-noto-sans-kr)', 'sans-serif'],
+        sans: ['Pretendard Variable', 'Pretendard', 'var(--font-poppins)', 'var(--font-noto-sans-kr)', 'sans-serif'],
         display: ['var(--font-playfair)', 'serif'],
       },
       borderRadius: {
