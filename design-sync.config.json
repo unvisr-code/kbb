@@ -1,0 +1,26 @@
+{
+  "pkg": "kbb",
+  "globalName": "KBB",
+  "projectId": "319e853a-182a-47ee-b5b4-f392c74b8757",
+  "shape": "package",
+  "srcDir": "src/components/ui",
+  "tsconfig": "./tsconfig.json",
+  "cssEntry": ".design-sync/compiled/tailwind.css",
+  "componentSrcMap": {
+    "Button": "src/components/ui/Button.tsx",
+    "Badge": "src/components/ui/Badge.tsx",
+    "Card": "src/components/ui/Card.tsx",
+    "Input": "src/components/ui/Input.tsx",
+    "Select": "src/components/ui/Select.tsx",
+    "Skeleton": "src/components/ui/Skeleton.tsx",
+    "Avatar": "src/components/ui/Avatar.tsx",
+    "Modal": "src/components/ui/Modal.tsx",
+    "BottomSheet": "src/components/ui/BottomSheet.tsx",
+    "SideSheet": "src/components/ui/SideSheet.tsx"
+  },
+  "overrides": {
+    "Modal": { "cardMode": "single", "viewport": "520x400" },
+    "BottomSheet": { "cardMode": "single", "viewport": "440x560" },
+    "SideSheet": { "cardMode": "single", "viewport": "560x460" }
+  }
+}
